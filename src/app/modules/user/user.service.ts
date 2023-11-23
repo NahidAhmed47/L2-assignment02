@@ -23,8 +23,19 @@ const getSingleUserByUserId = async (userId: number) => {
   }
 }
 
+// delete user by userId
+const deleteUserByUserId = async (userId: number) => {
+  if (await User.isUserExists(userId)) {
+    const result = await User.deleteOne({ userId })
+    return result
+  } else {
+    throw new Error('User not found')
+  }
+}
+
 export const UserServices = {
   createUserToDB,
   getAllUsersFromDB,
   getSingleUserByUserId,
+  deleteUserByUserId,
 }
