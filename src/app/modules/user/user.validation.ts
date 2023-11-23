@@ -26,8 +26,7 @@ export const userValidationSchema = z.object({
       }),
     )
     .optional(),
-});
-
+})
 
 export const userUpdateValidationSchema = z.object({
   userId: z.number().int().positive(),
