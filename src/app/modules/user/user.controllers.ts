@@ -111,7 +111,26 @@ const createNewOrder = async (req: Request, res: Response) => {
     )
     res.status(200).json({
       success: true,
-      message: 'Order created successfully',
+      message: 'Order created successfully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
+// Retrieve all orders for a specific user
+const getAllOrdersByUserId = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params
+    const result = await UserServices.getAllOrdersByUserId(Number(userId))
+    res.status(200).json({
+      success: true,
+      message: 'All orders retrieved successfully',
       data: result,
     })
   } catch (err: any) {
@@ -130,4 +149,5 @@ export const UserControllers = {
   deleteUserByUserId,
   updateUserByUserId,
   createNewOrder,
+  getAllOrdersByUserId,
 }
