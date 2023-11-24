@@ -19,7 +19,14 @@ const getSingleUserByUserId = async (userId: number) => {
     const result = await User.findOne({ userId }, '-orders -password')
     return result
   } else {
-    throw new Error('User not found')
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
@@ -29,7 +36,14 @@ const deleteUserByUserId = async (userId: number) => {
     const result = await User.deleteOne({ userId })
     return result
   } else {
-    throw new Error('User not found')
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
@@ -43,7 +57,14 @@ const updateUserByUserId = async (userId: number, user: TUser) => {
     )
     return updatedUser
   } else {
-    throw new Error('User not found')
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
@@ -60,7 +81,14 @@ const createNewOrderToDB = async (userId: number, order: TOrder) => {
     )
     return newOrder
   } else {
-    throw new Error('User not found')
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
@@ -70,6 +98,15 @@ const getAllOrdersByUserIdFormDB = async (userId: number) => {
   if (await User.isUserExists(userId)) {
     const result = await User.findOne({ userId }, 'orders')
     return result
+  } else {
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
@@ -107,7 +144,14 @@ const calculateTotalPriceOfAllOrdersByUserIdFromDB = async (userId: number) => {
     ])
     return result
   } else {
-    throw new Error('User not found')
+    throw {
+      success: false,
+      message: 'User not found!',
+      error: {
+        code: 404,
+        description: 'User nor found!',
+      },
+    }
   }
 }
 
