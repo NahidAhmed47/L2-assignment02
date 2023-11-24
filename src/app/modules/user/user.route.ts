@@ -10,5 +10,9 @@ router.get('/:userId', UserControllers.getSingleUserByUserId)
 router.put('/:userId', UserControllers.updateUserByUserId)
 router.put('/:userId/orders', UserControllers.createNewOrder)
 router.get('/:userId/orders', UserControllers.getAllOrdersByUserId)
+router.get(
+  '/:userId/orders/total-price',
+  UserControllers.calculateTotalPriceOfAllOrdersByUserId,
+)
 
 export const UserRoutes = router

@@ -127,10 +127,35 @@ const createNewOrder = async (req: Request, res: Response) => {
 const getAllOrdersByUserId = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const result = await UserServices.getAllOrdersByUserId(Number(userId))
+    const result = await UserServices.getAllOrdersByUserIdFormDB(Number(userId))
     res.status(200).json({
       success: true,
       message: 'All orders retrieved successfully',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went wrong',
+      error: err,
+    })
+  }
+}
+
+// calculate total price of all orders for a specific user
+const calculateTotalPriceOfAllOrdersByUserId = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const { userId } = req.params
+    const result =
+      await UserServices.calculateTotalPriceOfAllOrdersByUserIdFromDB(
+        Number(userId),
+      )
+    res.status(200).json({
+      success: true,
+      message: 'Total price calculated successfully!',
       data: result,
     })
   } catch (err: any) {
@@ -150,4 +175,5 @@ export const UserControllers = {
   updateUserByUserId,
   createNewOrder,
   getAllOrdersByUserId,
+  calculateTotalPriceOfAllOrdersByUserId,
 }

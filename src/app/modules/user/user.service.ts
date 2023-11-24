@@ -47,13 +47,6 @@ const updateUserByUserId = async (userId: number, user: TUser) => {
   }
 }
 
-//push new order id to user
-// await UserModel.updateOne({ _id: req.body.userId }, {
-//     $push: {
-//         ordersId: newOrder._id
-//     }
-// })
-
 // create new order and push to user
 const createNewOrderToDB = async (userId: number, order: TOrder) => {
   if (await User.isUserExists(userId)) {
@@ -73,10 +66,48 @@ const createNewOrderToDB = async (userId: number, order: TOrder) => {
 
 // Retrieve all orders for a specific user
 
-const getAllOrdersByUserIdFormId = async (userId: number) => {
+const getAllOrdersByUserIdFormDB = async (userId: number) => {
   if (await User.isUserExists(userId)) {
     const result = await User.findOne({ userId }, 'orders')
     return result
+  }
+}
+
+// calculate total price of all orders for a specific user
+const calculateTotalPriceOfAllOrdersByUserIdFromDB = async (userId: number) => {
+  if (await User.isUserExists(userId)) {
+    const result = await User.aggregate([
+      {
+        $match: {
+          userId: userId,
+        },
+      },
+      {
+        $unwind: '$orders',
+      },
+      {
+        $group: {
+          _id: '$userId',
+          totalPrice: {
+            $sum: {
+              $multiply: ['$orders.price', '$orders.quantity'],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: '$_id',
+          totalPrice: {
+            $round: ['$totalPrice', 2],
+          },
+        },
+      },
+    ])
+    return result
+  } else {
+    throw new Error('User not found')
   }
 }
 
@@ -87,5 +118,6 @@ export const UserServices = {
   deleteUserByUserId,
   updateUserByUserId,
   createNewOrderToDB,
-  getAllOrdersByUserId: getAllOrdersByUserIdFormId,
+  getAllOrdersByUserIdFormDB,
+  calculateTotalPriceOfAllOrdersByUserIdFromDB,
 }
