@@ -52,17 +52,40 @@ const deleteUserByUserId = async (userId: number) => {
 // update user data
 const updateUserByUserId = async (userId: number, user: TUser) => {
   if (await User.isUserExists(userId)) {
+    const existsData = (await User.findOne({ userId })) as TUser
     const updatedUser = await User.findOneAndUpdate(
       { userId },
-      { $set: user },
-      { new: true, runValidators: true },
-    ).select('-orders -password -__v -_id -createdAt -updatedAt')
+      {
+        $set: {
+          username: user?.username || existsData.username,
+          'fullName.firstName':
+            user?.fullName?.firstName || existsData.fullName.firstName,
+          'fullName.lastName':
+            user?.fullName?.lastName || existsData.fullName.lastName,
+          age: user?.age || existsData.age,
+          email: user?.email || existsData.email,
+          'address.street': user?.address?.street || existsData.address.street,
+          'address.city': user?.address?.city || existsData.address.city,
+          'address.country':
+            user?.address?.country || existsData.address.country,
+        },
+        $push: {
+          hobbies: { $each: user?.hobbies || [] },
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+        select: '-orders -password -__v -_id -createdAt -updatedAt',
+      },
+    )
+
     return updatedUser
   } else {
     throw {
       error: {
         code: 404,
-        description: 'User nor found!',
+        description: 'User not found!',
       },
     }
   }
