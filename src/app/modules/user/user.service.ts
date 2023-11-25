@@ -56,23 +56,11 @@ const deleteUserByUserId = async (userId: number) => {
 // update user data
 const updateUserByUserId = async (userId: number, user: TUser) => {
   if (await User.isUserExists(userId)) {
-    console.log(user)
-    const getUser = await User.findOne({ userId })
     const updatedUser = await User.findOneAndUpdate(
       { userId },
-      {
-        $addToSet: {
-          username: user?.username || getUser?.username,
-          fullName: user?.fullName || getUser?.fullName,
-          age: user?.age || getUser?.age,
-          email: user?.email || getUser?.email,
-          address: user?.address || getUser?.address,
-          isActive: user?.isActive || getUser?.isActive,
-          hobbies: { $each: user?.hobbies },
-        },
-      },
+      { $set: user },
       { new: true, runValidators: true },
-    ).select('-orders -password')
+    ).select('-orders -password -isDeleted -__v -_id -createdAt -updatedAt')
     return updatedUser
   } else {
     throw {
@@ -114,7 +102,7 @@ const createNewOrderToDB = async (userId: number, order: TOrder) => {
 
 const getAllOrdersByUserIdFormDB = async (userId: number) => {
   if (await User.isUserExists(userId)) {
-    const result = await User.findOne({ userId }, 'orders')
+    const result = await User.findOne({ userId }, 'orders -_id')
     return result
   } else {
     throw {
@@ -160,7 +148,7 @@ const calculateTotalPriceOfAllOrdersByUserIdFromDB = async (userId: number) => {
         },
       },
     ])
-    return result
+    return result[0]
   } else {
     throw {
       success: false,

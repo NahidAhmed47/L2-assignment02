@@ -1,7 +1,12 @@
+import { TUser } from './user.interface'
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request, Response } from 'express'
 import { UserServices } from './user.service'
-import { orderValidationSchema, userValidationSchema } from './user.validation'
+import {
+  orderValidationSchema,
+  updateUserValidationSchema,
+  userValidationSchema,
+} from './user.validation'
 
 // create user to databse
 const createUser = async (req: Request, res: Response) => {
@@ -68,7 +73,7 @@ const deleteUserByUserId = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'User deleted successfully',
-      data: result,
+      data: result && null,
     })
   } catch (err: any) {
     res.status(500).json({
@@ -82,20 +87,37 @@ const deleteUserByUserId = async (req: Request, res: Response) => {
 // update user data
 const updateUserByUserId = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.params
+    const { userId: id } = req.params
     const { user } = req.body
-    const result = await UserServices.updateUserByUserId(Number(userId), user)
+
+    const zodParsedDataForUpdate = updateUserValidationSchema.parse(user)
+
+    const result = await UserServices.updateUserByUserId(
+      Number(id),
+      zodParsedDataForUpdate as TUser,
+    )
+
     res.status(200).json({
       success: true,
       message: 'User updated successfully',
       data: result,
     })
   } catch (err: any) {
-    res.status(500).json({
-      success: false,
-      message: err.message || 'something went wrong',
-      error: err,
-    })
+    if (err.errors) {
+      // Handle validation errors
+      res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: err.errors,
+      })
+    } else {
+      // Handle other types of errors
+      res.status(500).json({
+        success: false,
+        message: err.message || 'Something went wrong',
+        error: err,
+      })
+    }
   }
 }
 
@@ -112,7 +134,7 @@ const createNewOrder = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: 'Order created successfully!',
-      data: result,
+      data: result && null,
     })
   } catch (err: any) {
     res.status(500).json({

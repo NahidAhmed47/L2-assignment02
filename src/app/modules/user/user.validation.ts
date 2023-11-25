@@ -29,6 +29,29 @@ export const userValidationSchema = z.object({
   isDeleted: z.boolean().optional().default(false),
 })
 
+// update user validation schema
+export const updateUserValidationSchema = z.object({
+  username: z.string().optional(),
+  password: z.string().optional(),
+  fullName: z
+    .object({
+      firstName: z.string().optional(),
+      lastName: z.string().optional(),
+    })
+    .optional(),
+  age: z.number().int().positive().optional(),
+  email: z.string().email().optional(),
+  isActive: z.boolean().optional(),
+  hobbies: z.array(z.string()).optional(),
+  address: z
+    .object({
+      street: z.string().optional(),
+      city: z.string().optional(),
+      country: z.string().optional(),
+    })
+    .optional(),
+})
+
 // order validation schema
 export const orderValidationSchema = z.object({
   productName: z.string(),
