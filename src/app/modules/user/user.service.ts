@@ -26,8 +26,6 @@ const getSingleUserByUserId = async (userId: number) => {
     return result
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
@@ -43,8 +41,6 @@ const deleteUserByUserId = async (userId: number) => {
     return result
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
@@ -64,8 +60,6 @@ const updateUserByUserId = async (userId: number, user: TUser) => {
     return updatedUser
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
@@ -88,8 +82,6 @@ const createNewOrderToDB = async (userId: number, order: TOrder) => {
     return newOrder
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
@@ -106,8 +98,6 @@ const getAllOrdersByUserIdFormDB = async (userId: number) => {
     return result
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
@@ -151,8 +141,6 @@ const calculateTotalPriceOfAllOrdersByUserIdFromDB = async (userId: number) => {
     return result[0]
   } else {
     throw {
-      success: false,
-      message: 'User not found!',
       error: {
         code: 404,
         description: 'User nor found!',
