@@ -5,7 +5,7 @@ import { User } from './user.model'
 const createUserToDB = async (user: TUser) => {
   const createdUser = await User.create(user)
   const result = await User.findOne({ _id: createdUser._id }).select(
-    '-orders -isDeleted -password -__v -_id -createdAt -updatedAt',
+    '-orders -password -__v -_id -createdAt -updatedAt',
   )
   return result
 }
@@ -21,7 +21,7 @@ const getSingleUserByUserId = async (userId: number) => {
   if (await User.isUserExists(userId)) {
     const result = await User.findOne(
       { userId },
-      '-orders -password -isDeleted -__v -_id -createdAt -updatedAt',
+      '-orders -password -__v -_id -createdAt -updatedAt',
     )
     return result
   } else {
@@ -39,7 +39,7 @@ const getSingleUserByUserId = async (userId: number) => {
 // delete user by userId
 const deleteUserByUserId = async (userId: number) => {
   if (await User.isUserExists(userId)) {
-    const result = await User.updateOne({ userId }, { isDeleted: true })
+    const result = await User.deleteOne({ userId })
     return result
   } else {
     throw {
@@ -60,7 +60,7 @@ const updateUserByUserId = async (userId: number, user: TUser) => {
       { userId },
       { $set: user },
       { new: true, runValidators: true },
-    ).select('-orders -password -isDeleted -__v -_id -createdAt -updatedAt')
+    ).select('-orders -password -__v -_id -createdAt -updatedAt')
     return updatedUser
   } else {
     throw {

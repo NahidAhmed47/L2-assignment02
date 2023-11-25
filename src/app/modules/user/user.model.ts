@@ -37,10 +37,6 @@ const userSchema = new Schema<TUser>(
     hobbies: { type: [String], required: [true, 'Hobbies are required'] },
     address: { type: addressSchema, required: [true, 'Address is required'] },
     orders: [orderSchema],
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
   },
   {
     toJSON: {

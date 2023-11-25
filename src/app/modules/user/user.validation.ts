@@ -26,7 +26,6 @@ export const userValidationSchema = z.object({
       }),
     )
     .optional(),
-  isDeleted: z.boolean().optional().default(false),
 })
 
 // update user validation schema
