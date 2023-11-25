@@ -37,6 +37,10 @@ const userSchema = new Schema<TUser>(
     hobbies: { type: [String], required: [true, 'Hobbies are required'] },
     address: { type: addressSchema, required: [true, 'Address is required'] },
     orders: [orderSchema],
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     toJSON: {
@@ -62,6 +66,12 @@ userSchema.methods.toJSON = function () {
   delete userObject.password
   return userObject
 }
+
+// Query Middleware
+userSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
+  next()
+})
 
 // static method to check is user exists
 userSchema.statics.isUserExists = async function (userId: number) {

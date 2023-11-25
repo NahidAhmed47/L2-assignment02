@@ -3,20 +3,26 @@ import { User } from './user.model'
 
 // create user to database
 const createUserToDB = async (user: TUser) => {
-  const result = await User.create(user)
+  const createdUser = await User.create(user)
+  const result = await User.findOne({ _id: createdUser._id }).select(
+    '-orders -isDeleted -password -__v -_id -createdAt -updatedAt',
+  )
   return result
 }
 
 // get all user from database
 const getAllUsersFromDB = async () => {
-  const result = await User.find({}, 'username fullName age email address')
+  const result = await User.find({}, 'username fullName age email address -_id')
   return result
 }
 
 // get single user by userId
 const getSingleUserByUserId = async (userId: number) => {
   if (await User.isUserExists(userId)) {
-    const result = await User.findOne({ userId }, '-orders -password')
+    const result = await User.findOne(
+      { userId },
+      '-orders -password -isDeleted -__v -_id -createdAt -updatedAt',
+    )
     return result
   } else {
     throw {
@@ -33,7 +39,7 @@ const getSingleUserByUserId = async (userId: number) => {
 // delete user by userId
 const deleteUserByUserId = async (userId: number) => {
   if (await User.isUserExists(userId)) {
-    const result = await User.deleteOne({ userId })
+    const result = await User.updateOne({ userId }, { isDeleted: true })
     return result
   } else {
     throw {
@@ -50,11 +56,23 @@ const deleteUserByUserId = async (userId: number) => {
 // update user data
 const updateUserByUserId = async (userId: number, user: TUser) => {
   if (await User.isUserExists(userId)) {
+    console.log(user)
+    const getUser = await User.findOne({ userId })
     const updatedUser = await User.findOneAndUpdate(
       { userId },
-      { $set: user },
+      {
+        $addToSet: {
+          username: user?.username || getUser?.username,
+          fullName: user?.fullName || getUser?.fullName,
+          age: user?.age || getUser?.age,
+          email: user?.email || getUser?.email,
+          address: user?.address || getUser?.address,
+          isActive: user?.isActive || getUser?.isActive,
+          hobbies: { $each: user?.hobbies },
+        },
+      },
       { new: true, runValidators: true },
-    )
+    ).select('-orders -password')
     return updatedUser
   } else {
     throw {
