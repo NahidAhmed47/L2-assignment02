@@ -11,7 +11,7 @@ import {
 // create user to databse
 const createUser = async (req: Request, res: Response) => {
   try {
-    const { user: userData } = req.body
+    const userData = req.body;
     const zodParsedData = userValidationSchema.parse(userData)
     const result = await UserServices.createUserToDB(zodParsedData)
     res.status(200).json({
