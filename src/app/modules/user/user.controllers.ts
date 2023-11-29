@@ -88,8 +88,7 @@ const deleteUserByUserId = async (req: Request, res: Response) => {
 const updateUserByUserId = async (req: Request, res: Response) => {
   try {
     const { userId: id } = req.params
-    const { user } = req.body
-
+    const user = req.body
     const zodParsedDataForUpdate = updateUserValidationSchema.parse(user)
 
     const result = await UserServices.updateUserByUserId(
@@ -125,7 +124,7 @@ const updateUserByUserId = async (req: Request, res: Response) => {
 const createNewOrder = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params
-    const { order } = req.body
+    const order = req.body
     const zodParsedData = orderValidationSchema.parse(order)
     const result = await UserServices.createNewOrderToDB(
       Number(userId),

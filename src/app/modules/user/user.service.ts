@@ -62,6 +62,7 @@ const updateUserByUserId = async (userId: number, user: TUser) => {
             user?.fullName?.firstName || existsData.fullName.firstName,
           'fullName.lastName':
             user?.fullName?.lastName || existsData.fullName.lastName,
+          password: user?.password || existsData.password,
           age: user?.age || existsData.age,
           email: user?.email || existsData.email,
           'address.street': user?.address?.street || existsData.address.street,
@@ -154,7 +155,6 @@ const calculateTotalPriceOfAllOrdersByUserIdFromDB = async (userId: number) => {
       {
         $project: {
           _id: 0,
-          userId: '$_id',
           totalPrice: {
             $round: ['$totalPrice', 2],
           },
