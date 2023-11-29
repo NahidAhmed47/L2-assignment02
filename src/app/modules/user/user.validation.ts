@@ -1,28 +1,56 @@
 import { z } from 'zod'
 
 export const userValidationSchema = z.object({
-  userId: z.number().int().positive(),
-  username: z.string(),
-  password: z.string(),
-  fullName: z.object({
-    firstName: z.string(),
-    lastName: z.string(),
+  userId: z.number({
+    required_error: 'User Id is required',
+  }).int().positive(),
+  username: z.string({
+    required_error: 'Username is required',
   }),
-  age: z.number().int().positive(),
-  email: z.string().email(),
+  password: z.string({
+    required_error: 'Password is required',
+  }),
+  fullName: z.object({
+    firstName: z.string({
+      required_error: 'First name is required',
+    }),
+    lastName: z.string({
+      required_error: 'Last name is required',
+    }),
+  }),
+  age: z.number({
+    required_error: 'Age is required'
+  }).int().positive(),
+  email: z.string({
+    required_error: 'Email is required',
+  }).email(),
   isActive: z.boolean().default(true),
-  hobbies: z.array(z.string()),
+  hobbies: z.array(z.string({
+    required_error: 'Hobbies are required',
+  })),
   address: z.object({
-    street: z.string(),
-    city: z.string(),
-    country: z.string(),
+    street: z.string({
+      required_error: 'Street is required',
+    }),
+    city: z.string({
+      required_error: 'City is required',
+    }),
+    country: z.string({
+      required_error: 'Country is required',
+    }),
   }),
   orders: z
     .array(
       z.object({
-        productName: z.string(),
-        price: z.number().positive(),
-        quantity: z.number().int().positive(),
+        productName: z.string({
+          required_error: 'Product name is required',
+        }),
+        price: z.number({
+          required_error: 'Price is required',
+        }).positive(),
+        quantity: z.number({
+          required_error: 'Quantity is required',
+        }).int().positive(),
       }),
     )
     .optional(),

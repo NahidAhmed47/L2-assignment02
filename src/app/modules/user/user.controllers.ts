@@ -22,8 +22,8 @@ const createUser = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: err?.issues[0]?.message || 'Something went wrong',
+      error: err?.issues[0]?.message || err?.error,
     })
   }
 }
@@ -40,7 +40,7 @@ const getAllUsers = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
+      message: 'something went wrong',
       error: err,
     })
   }
@@ -59,8 +59,8 @@ const getSingleUserByUserId = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: err?.error?.description || 'something went wrong',
+      error: err?.error || err,
     })
   }
 }
@@ -78,8 +78,8 @@ const deleteUserByUserId = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: err?.error?.description || 'something went wrong',
+      error: err?.error || err,
     })
   }
 }
@@ -113,7 +113,7 @@ const updateUserByUserId = async (req: Request, res: Response) => {
       // Handle other types of errors
       res.status(500).json({
         success: false,
-        message: err.message || 'Something went wrong',
+        message: 'Something went wrong',
         error: err,
       })
     }
@@ -138,7 +138,7 @@ const createNewOrder = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
+      message: 'something went wrong',
       error: err,
     })
   }
@@ -157,8 +157,8 @@ const getAllOrdersByUserId = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: err?.error?.description || 'something went wrong',
+      error: err?.error || err,
     })
   }
 }
@@ -182,8 +182,8 @@ const calculateTotalPriceOfAllOrdersByUserId = async (
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: err.message || 'something went wrong',
-      error: err,
+      message: err?.error?.description || 'something went wrong',
+      error: err?.error || err,
     })
   }
 }
