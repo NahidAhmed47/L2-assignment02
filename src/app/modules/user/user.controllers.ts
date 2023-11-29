@@ -113,8 +113,8 @@ const updateUserByUserId = async (req: Request, res: Response) => {
       // Handle other types of errors
       res.status(500).json({
         success: false,
-        message: 'Something went wrong',
-        error: err,
+        message: err?.error?.description || 'something went wrong',
+        error: err?.error || err,
       })
     }
   }
