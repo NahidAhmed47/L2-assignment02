@@ -81,7 +81,13 @@ export const updateUserValidationSchema = z.object({
 
 // order validation schema
 export const orderValidationSchema = z.object({
-  productName: z.string(),
-  price: z.number().positive(),
-  quantity: z.number().int().positive(),
+  productName: z.string({
+    required_error: 'Product name is required',
+  }),
+  price: z.number({
+    required_error: 'Price is required',
+  }).positive(),
+  quantity: z.number({
+    required_error: 'Quantity is required',
+  }).int().positive(),
 })

@@ -141,8 +141,11 @@ const createNewOrder = async (req: Request, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: 'something went wrong',
-      error: err,
+      message: err?.error?.description || 'something went wrong',
+      error: err?.error || {
+        code: 500,
+        description: err?.issues[0]?.message
+      } || err,
     })
   }
 }
